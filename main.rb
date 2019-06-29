@@ -30,7 +30,18 @@ def inc_size
 end
 
 def post_slack
-  $client.chat_postMessage(channel: '#bogosort', text: $list.to_s, as_user: true)
+  count = 0
+  loop do
+    begin
+      $client.chat_postMessage(channel: '#bogosort', text: $list.to_s, as_user: true)
+    rescue
+      p $!
+      sleep(2 ** count)
+      count += 1
+    else
+      break
+    end
+  end
 end
 
 def bogosort
